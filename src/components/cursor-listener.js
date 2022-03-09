@@ -3,5 +3,9 @@ AFRAME.registerComponent('cursor-listener', {
     this.el.addEventListener('click', evt => {
       console.log(evt);
     });
+
+    this.el.addEventListener('teleport', evt => {
+      console.log('teleport');
+    });
   }
 });
