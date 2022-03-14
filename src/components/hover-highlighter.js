@@ -3,24 +3,39 @@ AFRAME.registerComponent('hover-highlighter', {
     color: {type: 'color', default: 'white'}
   },
   init: function () {
-    let target = this.el;
-    this.handlerOnEnter = evt => this.onEnter(evt);
-    this.handlerOnLeave = evt => this.onLeave(evt);
-    target.addEventListener("mouseenter", this.handlerOnEnter);
-    target.addEventListener("mouseleave", this.handlerOnLeave);
+    this.onEnter = this.onEnter.bind(this);
+    this.onLeave = this.onLeave.bind(this);
+    this.el.addEventListener('mouseenter', this.onEnter);
+    this.el.addEventListener('mouseleave', this.onLeave);
   },
+
   onEnter: function (evt) {
-    let cursor = evt.detail.cursorEl;
-    this.savedColor = cursor.getAttribute("material").color;
-    cursor.setAttribute("material", "color", this.data.color);
+    const cursor = evt.detail.cursorEl;
+    const isLaser = cursor.components['laser-controls'] ? true : false;
+
+    if (isLaser) {
+      this.savedColor = cursor.getAttribute('raycaster').lineColor;
+      cursor.setAttribute('raycaster', 'lineColor',  this.data.color);
+    } else {
+      this.savedColor = cursor.getAttribute('material').color;
+      cursor.setAttribute('material', 'color',  this.data.color);
+    }
   },
+
   onLeave: function (evt) {
-    let cursor = evt.detail.cursorEl;
-    cursor.setAttribute("material", "color", this.savedColor);
+    const cursor = evt.detail.cursorEl;
+    const isLaser = cursor.components['laser-controls'] ? true : false;
+
+    if (isLaser) {
+      cursor.setAttribute('raycaster', 'lineColor',  this.savedColor);
+    } else {
+      cursor.setAttribute('material', 'color',  this.savedColor);
+    }
   },
+
   remove: function () {
-    let target = this.el;
-    target.removeEventListener("mouseenter", this.handlerOnEnter);
-    target.removeEventListener("mouseleave", this.handlerOnLeave);
+    this.el.removeEventListener('mouseenter', this.onEnter);
+    this.el.removeEventListener('mouseleave', this.onLeave);
   }
+
 });

@@ -9,10 +9,10 @@ AFRAME.registerComponent('toggle-events', {
     this.state = 0;
     this.el.addEventListener(this.data.sourceEvt, evt => {
       if (this.state == 0) {
-        this.el.emit(this.data.evt1);
+        this.el.emit(this.data.evt1, {}, false);
         this.state = 1;
       } else {
-        this.el.emit(this.data.evt2);
+        this.el.emit(this.data.evt2, {}, false);
         this.state = 0;
       }
     });

@@ -8,8 +8,11 @@
   </head>
   <body>
     <a-scene astats>
+      <a-assets>
 
-      <a-plane id="navmesh" visible="false" rotation="-90 0 0" height="20" width="20" material="color: brown"></a-plane>
+      </a-assets>
+
+      <a-plane id="navmesh" visible="true" rotation="-90 0 0" height="20" width="20" material="color: skyblue"></a-plane>
 
       <a-box
         id="tardis"
@@ -17,20 +20,20 @@
         aanimate-rotation="speed: 10; axe: y"
         position="1 1 -5"
         material="color: red"
-        emit-when-near="target: #head; distance: 1; event: teleport;"
       ></a-box>
 
 
-      <a-box id="click-me"
-        cursor-listener
+      <a-box
+        id="click-me"
         aanimate-rotation__y="speed: 10; axe: y"
         aanimate-rotation__x="speed: 10; axe: x"
         position="3 0 -5"
         material="color: green"
         hover-highlighter
-        on-event-set__near="event: click; attribute: material.color; value: tomato"
-        on-event-set__far="event: unclick; attribute: material.color; value: green"
-        emit-when-near="target: #head; distance: 2; event: click; eventFar: unclick"
+        on-event-set__active="event: active; attribute: material.color; value: tomato"
+        on-event-set__inactive="event: inactive; attribute: material.color; value: green"
+        toggle-events="sourceEvt: click; evt1: active; evt2: inactive"
+        emit-when-near="target: #head; distance: 2; event: click; eventFar: click"
       ></a-box>
 
       <im-box size="1" position="2 0 -2" color="tomato" hover-highlighter>
@@ -49,34 +52,54 @@
           depth="0.2"
           width="1.25"
           height="2.5"
-          color="pink"
+          color="brown"
           position="0.675 0 0"
-          cursor-listener
           hover-highlighter
           toggle-events="sourceEvt: click; evt1: open; evt2: close"
-          emit-when-near="target: #head; distance: 2; event: click; eventFar: click"
+          emit-when-near="target: #head; distance: 1; event: open; eventFar: close"
         ></a-box>
       </a-entity>
 
-      <a-entity id="camera-rig">
+      <a-entity
+        id="camera-rig"
+        animation__teleport-x="property: object3D.position.x; to: 0; dur: 0; startEvents: teleport"
+        animation__teleport-z="property: object3D.position.z; to: 0; dur: 0; startEvents: teleport"
+        listen-to="evt: teleport; target: #head; emit: teleport"
+      >
         <a-entity id="head"
           camera
+          position="0 1.6 0"
           wasd-controls
           simple-navmesh-constraint="navmesh: #navmesh"
           look-controls="pointerLockEnabled: true"
-          position="0 1.6 0"
-          listen-to="target: #tardis; evt: teleport; emit: teleport"
-          on-event-set="event: teleport; attribute: position; value: 0 1.6 0"
+          emit-when-near="target: #tardis; distance: 1; event: teleport;"
+          animation__teleport-x="property: object3D.position.x; to: 0; dur: 0; startEvents: teleport"
+          animation__teleport-z="property: object3D.position.z; to: 0; dur: 0; startEvents: teleport"
         >
           <a-entity
             geometry="primitive: circle; radius: 0.0005"
             material="shader: flat; color: black"
             position="0 0 -0.1"
-            visible="true"
             cursor
-            raycaster="far: 10; objects: [cursor-listener], [hover-highlighter]"
+            disable-in-vr__geometry="component: geometry"
+            disable-in-vr__cursor="component: cursor"
+            disable-in-vr__raycaster="component: raycaster"
+            raycaster="far: 100; objects: [hover-highlighter]"
           ></a-entity>
         </a-entity>
+
+        <a-entity
+          id="hand-left"
+          hand-controls="hand: left"
+          blink-controls="cameraRig: #camera-rig; teleportOrigin: #head; collisionEntities: #navmesh; snapTurn: false;"
+        ></a-entity>
+        <a-entity
+          id="hand-right"
+          hand-controls="hand: right"
+          laser-controls="hand: right"
+          raycaster="far: 10; lineColor: red; objects: [hover-highlighter]"
+        ></a-entity>
+
       </a-entity>
     </a-scene>
   </body>

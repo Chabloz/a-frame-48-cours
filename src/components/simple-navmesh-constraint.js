@@ -1,3 +1,4 @@
+// from AdaRoseCanon xr-boilerplate https://github.com/AdaRoseCannon/aframe-xr-boilerplate
 AFRAME.registerComponent('simple-navmesh-constraint', {
   schema: {
     navmesh: {
