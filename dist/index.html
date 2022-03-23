@@ -60,6 +60,14 @@
         ></a-box>
       </a-entity>
 
+      <a-box
+        position="-3 1.5 -3"
+        rotation="0 45 0"
+        life-like-automaton="resolution: 512; birthRule: 3; survivalRule: 2,3; probAlive: 0.6; genPerSec: 60;"
+      ></a-box>
+
+      <a-plane position="-4 2 -2" color="red" my-mat width="2" height="2"></a-plane>
+
       <a-entity
         id="camera-rig"
         animation__teleport-x="property: object3D.position.x; to: 0; dur: 0; startEvents: teleport"
